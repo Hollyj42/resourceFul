@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.nav{
+    background-color: darkslategrey;
+    display: flex;
+    padding: 10px 30px 10px 30px;
+    justify-content: space-between;
+    height: 5em;
+    align-items: center;
+    font: bold;
+}
+.logo{
+    color: white;
+    font-size: 20px;
+    font-family: cursive;
+    min-width: 20px;
+    display: flex;
+    flex-grow: 1;
+}
+li{
+    display: flex;
+    flex-shrink: 1;
+}
+
+.nav>ul{
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    color: white;
+    align-items: center;
+    justify-items: right;
+}
+
+.about:hover, .help:hover{
+    color: rgb(38, 205, 205);
+     transition: 0.5s;
+}
+
+.lgbtn{
+    background-color: blue;
+    color: white;
+    padding: 2px 5px 2px 5px;
+    border: none;
+    border-radius: 2px;
+    font-size: 10px;
+    height: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    flex: 1;
+}
+.lgbtn:hover{
+    background-color: white;
+    color: blue;
+    transition: .5s;  
+}
+
+.hero{
+    background-color: rgb(181, 181, 249);
+    height: 85vh;
+    padding-left: 40px;
+    font-family:Arial, Helvetica, sans-serif, serif;
+    align-content: center;
+}
+
+.hero>h3{
+    font-size: 14px;
+    font-family: arial;
+}
+.explore{
+    background-color: rgb(0, 0, 252);
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px 10px 20px;
+    border: none;
+    border-radius: 2px;
+    margin-bottom: 20px;
+}
+.explore:hover{
+    background-color: white;
+    color: blue;
+    transition: .5s;
+}
+.footer{
+    background-color: darkslategrey;
+    justify-content: center;
+    text-align: center;   
+    height: 5vh;
+    align-content: center;
+}
+title{
+    background-color: yellow;
+}
+
+@media (max-width: 768px){
+    .nav{
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+    }
+    .logo{
+        text-align: center;
+    }
+    ul{
+        justify-content: center;
+    }
+    .hero{
+        padding: 20px;
+        text-align: center;
+    }
+}
