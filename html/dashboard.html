@@ -10,7 +10,7 @@
     
     <div class="heading">
         <button id="uploadSymbol">Upload <img class="uploadSymbol" src="../images/document.png" alt="Upload Symbol"/></button>
-        <button class="logout">Log out</button>
+        <button id="logoutButton" class="logout">Log out</button> 
     </div>
 
     <div class="upload-container">
@@ -38,42 +38,32 @@
     </div>
     
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Get the button element (ID from your HTML: <button id="uploadSymbol">)
-        const uploadButton = document.getElementById('uploadSymbol');
-        
-        // 2. Get the form container element (Class name from your HTML: <div class="upload-container">)
-        const formContainer = document.querySelector('.upload-container');
+    // --- 1. LOGOUT FUNCTION ---
+    function handleLogout() {
+        // Clear any stored local data (good practice, though not strictly necessary without server sessions)
+        localStorage.clear(); 
+        sessionStorage.clear(); 
 
-        // Check if both elements exist before adding the listener
-        if (uploadButton && formContainer) {
-            uploadButton.addEventListener('click', function() {
-                // Toggle the display property
-                if (formContainer.style.display === 'block') {
-                    // If it is currently visible, hide it
-                    formContainer.style.display = 'none';
-                } else {
-                    // If it is currently hidden, show it
-                    formContainer.style.display = 'block';
-                }
-            });
-        }
-    });
-
+        // Redirect the user to the login page
+        window.location.href = '../html/login.html'; 
+    }
+    
+    // --- 2. FUNCTION TO LOAD DOCUMENTS (Existing Logic) ---
     function loadLecturerDocuments() {
-        // Fetch data from the same API used for the student's courses page
         fetch('/api/courses')
             .then(response => response.json())
             .then(documents => {
                 const docList = document.getElementById('lecturerDocumentsList');
-                docList.innerHTML = ''; // Clear placeholder content
-
-                // Loop through the documents and create list items
+                docList.innerHTML = ''; 
+                
                 documents.forEach(doc => {
                     const listItem = document.createElement('li');
                     
-                    // You can display details like the course and title
-                    listItem.textContent = `Course: ${doc.course} - Title: ${doc.title}`; 
+                    // Display details using innerHTML for better styling
+                    listItem.innerHTML = `
+                        <span><strong>Course:</strong> ${doc.course}</span>
+                        <span><strong>Course No:</strong> ${doc.title}</span>
+                    `; 
                     
                     docList.appendChild(listItem);
                 });
@@ -85,8 +75,32 @@
             });
     }
 
+    // --- 3. EVENT LISTENERS (Runs when the page is ready) ---
+    document.addEventListener('DOMContentLoaded', function() {
+        // Upload form toggle logic
+        const uploadButton = document.getElementById('uploadSymbol');
+        const formContainer = document.querySelector('.upload-container');
+
+        if (uploadButton && formContainer) {
+            uploadButton.addEventListener('click', function() {
+                if (formContainer.style.display === 'block') {
+                    formContainer.style.display = 'none';
+                } else {
+                    formContainer.style.display = 'block';
+                }
+            });
+        }
+        
+        // LOGOUT BUTTON LISTENER
+        const logoutBtn = document.getElementById('logoutButton');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout); // Calls the function on click
+        }
+    });
+
+    // --- 4. INITIALIZE PAGE DATA ---
     window.onload = loadLecturerDocuments;
 
-</script>
+    </script>
 </body>
 </html>

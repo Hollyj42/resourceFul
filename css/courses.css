@@ -3,9 +3,9 @@
     margin: 0;
     box-sizing: border-box;
 }
-body{
+/* body{
     background-color: rgb(181, 181, 249);
-}
+} */
 
 .logo>a{
     text-decoration: none;
@@ -73,7 +73,7 @@ table{
     width: fit-content;
     width: 80vw;
     margin: auto;
-
+    font-size: 25px;
 }
 tr .detail{
     visibility: hidden;
