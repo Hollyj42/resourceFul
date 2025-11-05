@@ -1,0 +1,52 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+form{
+    /* background-color: rgb(181, 181, 249); */
+    box-shadow: 1px 1px 10px 5px  rgb(181, 181, 249);
+    width: 300px;
+    border: 1px black outset;
+    height: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 50px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.email-search{
+    width: 80%;
+    height: 20px;
+    font-size: 16px;
+    padding: 10px 10px 10px 10px;
+    border: 2px outset;
+    border-radius: 20px;
+}
+.email-search:focus{
+    font-size: 16px;
+    padding: 10px 10px 10px 10px;
+    border: none;
+    border-radius: 20px;
+}
+
+.resetSubmit{
+    width: 100px;
+    padding: 5px 5px 5px 5px;
+    border-radius: 15px;
+    border: none;
+    color: white;
+    background-color: blue;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.resetSubmit:hover{
+    color: blue;
+    background-color: white;
+    transition: .5s;
+}

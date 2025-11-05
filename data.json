@@ -1,0 +1,17 @@
+{
+    "lecturer": [
+        {
+        "email": "lecturer@resourcful.com",
+        "password": "securepassword",
+        "name": "Prof. Excellence"
+        }
+    ]
+    "documents": [
+        {
+            "title": "Project Defence Guide",
+            "course": "CSE 400",
+            "lecturer": "Prof. Excellence",
+            "filename": "defence_guide.pdf"
+        }
+    ]
+}

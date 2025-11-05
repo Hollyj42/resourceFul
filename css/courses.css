@@ -7,6 +7,12 @@ body{
     background-color: rgb(181, 181, 249);
 }
 
+.logo>a{
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
 .exploreSection{
     display: flex;
     align-items: center;
@@ -48,6 +54,7 @@ body{
    background-color: blue;
    color: white;
    font-size: 12px;
+    cursor: pointer;
 }
 .courseSubmit:hover{
     background-color: white;

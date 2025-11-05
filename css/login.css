@@ -14,6 +14,7 @@ form{
     border-radius: 12px;
     margin-top: 10vh;
     gap: 10px;
+    box-shadow: 1px 1px 10px 5px  rgb(181, 181, 249);
 }
 
 .emailInput, .pwdInput{
@@ -23,7 +24,7 @@ form{
     padding-left: 5px;
     font-size: 15px;
     border-radius: 8px;
-    border: 2px grey inset;
+    border: 2px grey thin;
 }
 form>.signIn{
     width: fit-content;
@@ -31,4 +32,15 @@ form>.signIn{
     margin: auto;
     padding: 10px 10px 10px 10px;
     border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    color: white;
+    background-color: blue;
+    font-size: 12px;
+}
+
+form>.signIn:hover{
+    color: blue;
+    background-color: white;
+    transition: 0.4s;
 }

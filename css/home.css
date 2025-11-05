@@ -21,9 +21,16 @@
     display: flex;
     flex-grow: 1;
 }
+
+.logo>a{
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
 li{
     display: flex;
     flex-shrink: 1;
+    cursor: pointer;
 }
 
 .nav>ul{
@@ -50,6 +57,7 @@ li{
     height: 30px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex: 1;
+    cursor: pointer;
 }
 .lgbtn:hover{
     background-color: white;
@@ -58,7 +66,7 @@ li{
 }
 
 .hero{
-    background-color: rgb(181, 181, 249);
+    background-color: rgb(181, 181, 250);
     height: 85vh;
     padding-left: 40px;
     font-family:Arial, Helvetica, sans-serif, serif;
@@ -77,11 +85,30 @@ li{
     border: none;
     border-radius: 2px;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 .explore:hover{
     background-color: white;
     color: blue;
     transition: .5s;
+}
+
+#heroImage{
+    position: absolute;
+    right: 100px;
+    top: 100px;
+    width: 400px;
+    height: 400px;
+    z-index: 2;
+    border: 5px rgb(181, 181, 250);
+    box-shadow: 2px 20px 20px rgb(181, 181, 250);
+    border: none;
+    display: flex;
+}
+#heroImage:hover{
+    transform: rotate(5deg) translate(20px);
+    transition: 0.9s;
+    transform: skew(200);
 }
 .footer{
     background-color: darkslategrey;
@@ -94,7 +121,7 @@ title{
     background-color: yellow;
 }
 
-@media (max-width: 768px){
+@media (max-width: 1000px){
     .nav{
         flex-direction: column;
         height: auto;
@@ -109,5 +136,8 @@ title{
     .hero{
         padding: 20px;
         text-align: center;
+    }
+    .heroImage{
+        display: none;
     }
 }
