@@ -4,13 +4,23 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const { Pool } = require('pg'); // <-- Import the new 'pg' library
 
 // --- 1. Define App and Port (Only Once!) ---
 const app = express();
 const port = process.env.PORT || 3000;
 
-// --- 2. Configure Multer for File Uploads ---
-// ⚠️ WARNING: This saves to a temporary folder. Files will be deleted on Render!
+// --- 2. Create the Database Connection Pool ---
+// This uses the DATABASE_URL you set in Render's Environment Variables
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false // Required for connecting to Render's database
+    }
+});
+
+// --- 3. Configure Multer for File Uploads ---
+// ⚠️ WARNING: This still saves to a temporary folder. We will fix this next.
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
@@ -25,90 +35,102 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// --- 3. Use Standard Middleware ---
+// --- 4. Use Standard Middleware ---
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// --- 4. Configure Static Folders (for CSS, HTML, etc.) ---
-// This serves files from 'html', 'css', and the root directory
+// --- 5. Configure Static Folders (for CSS, HTML, etc.) ---
 app.use(express.static(path.join(__dirname, 'html')));
 app.use(express.static(path.join(__dirname, 'css')));
 app.use(express.static(path.join(__dirname, '/')));
 
-// --- 5. DEFINE ALL YOUR ROUTES ---
+// --- 6. DEFINE ALL YOUR ROUTES (Now using async/await with the database) ---
 
-// --- Home Route (Fix for "Cannot GET /") ---
+// --- Home Route ---
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'home.html'));
 });
 
 // --- Login Route ---
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    // ⚠️ WARNING: 'data.json' must be in your GitHub repo, or this will crash!
-    const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
-    const lecturer = data.lecturers.find(
-        l => l.email === email && l.password === password
-    );
+    
+    try {
+        const result = await pool.query('SELECT * FROM lecturers WHERE email = $1', [email]);
+        
+        if (result.rows.length === 0) {
+            console.log(`Login failed: No user with email ${email}`);
+            return res.send("<script>alert('Invalid Email or Password. Please try again.'); window.location.href='/login.html';</script>");
+        }
 
-    if (lecturer) {
-        console.log(`Lecturer ${lecturer.name} logged in successfully.`);
-        return res.redirect('/dashboard.html'); // Simpler redirect
-    } else {
-        return res.send("<script>alert('Invalid Email or Password. Please try again.'); window.location.href='/login.html';</script>");
+        const lecturer = result.rows[0];
+
+        // ⚠️ IMPORTANT: You are storing passwords as plain text. This is very insecure.
+        // For a real project, you must hash passwords using 'bcrypt'.
+        if (lecturer.password === password) {
+            console.log(`Lecturer ${lecturer.name} logged in successfully.`);
+            return res.redirect('/dashboard.html');
+        } else {
+            console.log('Login failed: Incorrect password');
+            return res.send("<script>alert('Invalid Email or Password. Please try again.'); window.location.href='/login.html';</script>");
+        }
+
+    } catch (err) {
+        console.error('Database error during login:', err);
+        res.status(500).send('Server error. Please try again later.');
     }
 });
 
-// --- Signup Route (Fix for "Cannot POST /signup") ---
-app.post('/signup', (req, res) => {
+// --- Signup Route ---
+app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
-    // ⚠️ WARNING: 'data.json' must be in your GitHub repo, or this will crash!
-    const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
-    const existingLecturer = data.lecturers.find(l => l.email === email);
 
-    if (existingLecturer) {
-        console.log(`Sign up failed: Email ${email} already exists.`);
-        return res.send("<script>alert('Account already exists! Please Sign In.'); window.location.href='/login.html';</script>");
+    try {
+        // Check if email already exists
+        const existing = await pool.query('SELECT * FROM lecturers WHERE email = $1', [email]);
+        if (existing.rows.length > 0) {
+            console.log(`Sign up failed: Email ${email} already exists.`);
+            return res.send("<script>alert('Account already exists! Please Sign In.'); window.location.href='/login.html';</script>");
+        }
+
+        // Insert new lecturer
+        const insertQuery = 'INSERT INTO lecturers (name, email, password) VALUES ($1, $2, $3)';
+        await pool.query(insertQuery, [name, email, password]); // ⚠️ Insecure password!
+        
+        console.log(`New lecturer signed up: ${name} (${email})`);
+        return res.send("<script>alert('Account created successfully! Please Sign In.'); window.location.href='/login.html';</script>");
+
+    } catch (err) {
+        console.error('Database error during signup:', err);
+        res.status(500).send('Server error. Please try again later.');
     }
-
-    const newLecturer = { name, email, password };
-    data.lecturers.push(newLecturer);
-    
-    // ⚠️ WARNING: This write will be lost when Render's server restarts!
-    fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
-    console.log(`New lecturer signed up: ${name} (${email})`);
-    
-    return res.send("<script>alert('Account created successfully! Please Sign In.'); window.location.href='/login.html';</script>");
 });
 
 // --- Upload Route ---
-app.post('/upload', upload.single('documentFile'), (req, res) => {
+app.post('/upload', upload.single('documentFile'), async (req, res) => {
     const { title, course } = req.body;
     const filename = req.file.originalname;
-    const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
 
-    const newDocument = {
-        title: title,
-        course: course,
-        lecturer: "Prof. Excellence", // Note: This is hardcoded
-        filename: filename
-    };
+    try {
+        const insertQuery = 'INSERT INTO documents (title, course, lecturer, filename) VALUES ($1, $2, $3, $4)';
+        await pool.query(insertQuery, [title, course, "Prof. Excellence", filename]); // Note: Lecturer is hardcoded
+        
+        console.log(`Document uploaded and recorded: ${filename}`);
+        return res.send(`<script>alert('Document uploaded successfully!'); window.location.href='/dashboard.html';</script>`);
 
-    data.documents.push(newDocument);
-    // ⚠️ WARNING: This write will be lost when Render's server restarts!
-    fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
-    
-    console.log(`Document uploaded and recorded: ${filename}`);
-    return res.send(`<script>alert('Document uploaded successfully!'); window.location.href='/dashboard.html';</script>`);
+    } catch (err) {
+        console.error('Database error during upload:', err);
+        res.status(500).send('Server error. Please try again later.');
+    }
 });
 
 // --- API Route to Get Courses ---
-app.get('/api/courses', (req, res) => {
+app.get('/api/courses', async (req, res) => {
     try {
-        const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
-        res.json(data.documents);
-    } catch (error) {
-        console.error("Error retrieving documents:", error);
+        const result = await pool.query('SELECT * FROM documents');
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Error retrieving documents:", err);
         res.status(500).json({ message: "Could not load documents." });
     }
 });
@@ -116,6 +138,7 @@ app.get('/api/courses', (req, res) => {
 // --- Download Route ---
 app.get('/download/:filename', (req, res) => {
     const filename = req.params.filename;
+    // ⚠️ This still uses the temporary 'uploads' folder
     const filePath = path.join(uploadDir, filename);
 
     if (fs.existsSync(filePath)) {
@@ -125,7 +148,38 @@ app.get('/download/:filename', (req, res) => {
     }
 });
 
-// --- 6. Start the Server ---
+// --- 7. Function to Create Tables on Startup ---
+const createTables = async () => {
+    const createLecturersTable = `
+    CREATE TABLE IF NOT EXISTS lecturers (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password VARCHAR(100) NOT NULL
+    );`;
+
+    const createDocumentsTable = `
+    CREATE TABLE IF NOT EXISTS documents (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        course VARCHAR(100),
+        lecturer VARCHAR(100),
+        filename VARCHAR(255) NOT NULL
+    );`;
+
+    try {
+        await pool.query(createLecturersTable);
+        console.log('Lecturers table created or already exists.');
+        await pool.query(createDocumentsTable);
+        console.log('Documents table created or already exists.');
+    } catch (err) {
+        console.error('Error creating tables:', err);
+    }
+};
+
+// --- 8. Start the Server and Create Tables ---
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+    // Run the function to create tables when the server starts
+    createTables();
 });
