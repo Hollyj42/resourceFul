@@ -24,7 +24,7 @@
     height: 60px;
     background-color: lab(72.32% 17.63 -39.24);
     border-radius: 5px;
-    border: 2px  ridge;
+    border: 2px ridge;
 }
 
 .logout{
@@ -43,9 +43,109 @@
     transition: .9s;
 }
 
-.uploadedDoc{
+
+.upload-container {
     width: 90%;
-    height: fit-content;
-    margin: auto;
-    background-color: lab(72.32% 17.63 -39.24);
+    max-width: 450px; 
+    margin: 30px auto; 
+    padding: 20px;
+    
+    background-color: #f7f7f7; 
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+    
+    display: none; 
+}
+
+.upload-container h2 {
+    color: #333;
+    border-bottom: 2px solid #b5b5f9;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#uploadForm label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#uploadForm input[type="text"],
+#uploadForm input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+#submitUpload {
+    background-color: #4a7dff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#submitUpload:hover {
+    background-color: #3c64cc;
+}
+
+
+.uploadedDocList {
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px; 
+    
+    background-color: #fcfcfc; 
+    border-radius: 5px;
+    border: 1px solid #eee; 
+}
+
+.uploadedDocList h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.uploadedDocList ul {
+    list-style: none;
+    padding: 0;
+    font-size: 20px;
+}
+
+.uploadedDocList li {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    
+    background-color: #ffffff; 
+    padding: 12px 15px;
+    margin-bottom: 8px; 
+    
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    
+    font-size: 0.9em;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.uploadedDocList li:hover {
+    background-color: #f5f5ff; 
+    cursor: default;
+}
+
+.uploadedDocList li span {
+    margin-right: 15px;
+}
+
+.uploadedDocList li strong {
+    font-weight: bold;
+    color: #222; 
 }

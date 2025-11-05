@@ -1,17 +1,46 @@
 {
-    "lecturer": [
-        {
-        "email": "lecturer@resourcful.com",
-        "password": "securepassword",
-        "name": "Prof. Excellence"
-        }
-    ]
-    "documents": [
-        {
-            "title": "Project Defence Guide",
-            "course": "CSE 400",
-            "lecturer": "Prof. Excellence",
-            "filename": "defence_guide.pdf"
-        }
-    ]
+  "lecturers": [
+    {
+      "email": "lecturer@resourcful.com",
+      "password": "securepassword",
+      "name": "Prof. Excellence"
+    },
+    {
+      "email": "chukwubuikefavour0@gmail.com",
+      "name": "favour chukwubuike",
+      "password": "qwerty1234"
+    }
+  ],
+  "documents": [
+    {
+      "title": "Project Defence Guide",
+      "course": "CSE 400",
+      "lecturer": "Prof. Excellence",
+      "filename": "defence_guide.pdf"
+    },
+    {
+      "title": "VTE 419",
+      "course": "introduction to fraud",
+      "lecturer": "Prof. Excellence",
+      "filename": "doku.pub_python-basics-a-practical-introductionpdf.pdf"
+    },
+    {
+      "title": "fgb fmf",
+      "course": "mc, cm",
+      "lecturer": "Prof. Excellence",
+      "filename": "CEDR 342 CA FILLER (1)_251021_142412.pdf"
+    },
+    {
+      "title": "kvnjkvnjs",
+      "course": "knkxc",
+      "lecturer": "Prof. Excellence",
+      "filename": "CRE - 322 PART 3 - TYPES OF OPERATING SYSTEM - LESSON 4.ppsx"
+    },
+    {
+      "title": "GSP 208",
+      "course": "HUMANITIES",
+      "lecturer": "Prof. Excellence",
+      "filename": "GSP 208.docx"
+    }
+  ]
 }

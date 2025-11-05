@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
-    <form action="">
+    <form action="/login" method="post">
         <legend>LOG IN</legend>
         <label for="email">Email: <br>
-            <input type="email" class="emailInput" placeholder="Email" autofocus>
+            <input type="email" name="email" class="emailInput" placeholder="Email" autofocus>
         </label>
          <!-- <br> -->
          <label for="password">Password: <br>
-            <input type="password" class="pwdInput" placeholder="password">
+            <input type="password" name="password" class="pwdInput" placeholder="password">
          </label>
          <!-- <br> -->
         <p>Forgot <a href="resetpwd.html" target="_blank">Email/passwword</a></p>

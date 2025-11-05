@@ -24,14 +24,71 @@
         <button class="courseSubmit">Search</button>
     </div>
 
-    <div id="materialsContainer" class="material-grid">
-        <table>
+<div id="materialsContainer" class="material-grid">
+    <table>
+        <thead>
             <tr class="head">
-                <th colspan="3">Course</th>
-                <th colspan="3">Lecturer</th>
-                <th colspan="3" class="detail"></th>
+                <th>Course Name</th>
+                <th>Lecturer</th>
+                <th>Document Link</th>
             </tr>
-        </table>
-    </div>
+        </thead>
+        <tbody id="courseTableBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    function loadCourses() {
+        // 1. Fetch data from your backend API route
+        fetch('/api/courses')
+            .then(response => {
+                // Check if the server responded okay (Status 200)
+                if (!response.ok) {
+                    throw new Error('Server response failed: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(documents => {
+                const tableBody = document.getElementById('courseTableBody');
+                tableBody.innerHTML = ''; // Clear any loading/placeholder content
+
+                // 2. Loop through the documents and create a table row for each
+                documents.forEach(doc => {
+                    const row = tableBody.insertRow();
+                    
+                    // Column 1: Course Name (doc.course)
+                    row.insertCell().textContent = doc.course;
+                    
+                    // Column 2: Lecturer (doc.lecturer)
+                    row.insertCell().textContent = doc.lecturer;
+                    
+                    // Column 3: The Download Link
+                    const downloadCell = row.insertCell();
+                    const downloadLink = document.createElement('a');
+                    
+                    // Set the link text to the document title
+                    downloadLink.textContent = doc.title || 'Download File'; 
+                    
+                    // CRITICAL: The link URL points to your server's download route
+                    downloadLink.href = `/download/${doc.filename}`; 
+                    
+                    // Optional: Helps ensure the browser downloads the file
+                    downloadLink.setAttribute('download', doc.filename); 
+                    
+                    downloadCell.appendChild(downloadLink);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching courses:', error);
+                // Display a user-friendly error message
+                document.getElementById('courseTableBody').innerHTML = 
+                    '<tr><td colspan="3">....</td></tr>';
+            });
+    }
+
+    // Call the function automatically when the page loads
+    window.onload = loadCourses; 
+</script>
 </body>
 </html>

@@ -3,17 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lecturer Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-   <div class="heading">
-    <button id="uploadSymbol">Upload <img class="uploadSymbol" src="../images/document.png" alt=""></button>
-    <button class="logout">Log out</button>
-   </div> 
+    
+    <div class="heading">
+        <button id="uploadSymbol">Upload <img class="uploadSymbol" src="../images/document.png" alt="Upload Symbol"/></button>
+        <button class="logout">Log out</button>
+    </div>
 
-   <div class="uploadedDoc">
-    <h3>UPLOADED DOCUMENT</h3>
-   </div>
+    <div class="upload-container">
+        <h2>Upload New Document</h2>
+
+        <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+            
+            <label for="title">Course Title/Number:</label>
+            <input type="text" id="title" name="title" required><br>
+
+            <label for="course">Course Name:</label>
+            <input type="text" id="course" name="course" required><br>
+            
+            <label for="documentFile">Select File:</label>
+            <input type="file" id="documentFile" name="documentFile" required><br>
+            
+            <button type="submit" id="submitUpload">Submit Document</button>
+        </form>
+    </div>
+
+    <div class="uploadedDocList"> 
+        <h3>YOUR UPLOADED DOCUMENTS</h3>
+        
+        <ul id="lecturerDocumentsList"></ul>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Get the button element (ID from your HTML: <button id="uploadSymbol">)
+        const uploadButton = document.getElementById('uploadSymbol');
+        
+        // 2. Get the form container element (Class name from your HTML: <div class="upload-container">)
+        const formContainer = document.querySelector('.upload-container');
+
+        // Check if both elements exist before adding the listener
+        if (uploadButton && formContainer) {
+            uploadButton.addEventListener('click', function() {
+                // Toggle the display property
+                if (formContainer.style.display === 'block') {
+                    // If it is currently visible, hide it
+                    formContainer.style.display = 'none';
+                } else {
+                    // If it is currently hidden, show it
+                    formContainer.style.display = 'block';
+                }
+            });
+        }
+    });
+
+    function loadLecturerDocuments() {
+        // Fetch data from the same API used for the student's courses page
+        fetch('/api/courses')
+            .then(response => response.json())
+            .then(documents => {
+                const docList = document.getElementById('lecturerDocumentsList');
+                docList.innerHTML = ''; // Clear placeholder content
+
+                // Loop through the documents and create list items
+                documents.forEach(doc => {
+                    const listItem = document.createElement('li');
+                    
+                    // You can display details like the course and title
+                    listItem.textContent = `Course: ${doc.course} - Title: ${doc.title}`; 
+                    
+                    docList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching lecturer documents:', error);
+                const docList = document.getElementById('lecturerDocumentsList');
+                docList.innerHTML = '<li>Error loading documents. Please check the server connection.</li>';
+            });
+    }
+
+    window.onload = loadLecturerDocuments;
+
+</script>
 </body>
 </html>

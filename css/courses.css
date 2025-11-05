@@ -79,4 +79,25 @@ tr .detail{
     visibility: hidden;
 }
 
+.material-grid table thead th {
+    font-weight: bold;
+    color: #111; 
+    padding: 12px 8px; 
+    border-bottom: 2px solid #b5b5f9;
+    text-align: left;
+}
+
+#courseTableBody td {
+    font-weight: 500; 
+    color: #333;
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee; 
+}
+
+#courseTableBody td a {
+    font-weight: bold;
+    color: #4a7dff; 
+    text-decoration: none;
+}
+
 
