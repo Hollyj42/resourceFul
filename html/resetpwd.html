@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Reset Password</title>
     <link rel="stylesheet" href="../css/resetpwd.css">
 </head>
 <body>
-    <form action="">
+    <form action="/send-reset-link" method="POST">
         <h3>Enter your email</h3>
-        <input type="email" class="email-search" placeholder="Email" required autofocus> <br>
+        
+        <input type="email" name="email" class="email-search" placeholder="Email" required autofocus>
+        
+        <br>
         <button class="resetSubmit">Submit</button>
     </form>
-</script>
 </body>
 </html>

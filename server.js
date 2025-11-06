@@ -105,6 +105,30 @@ app.post('/signup', async (req, res) => {
     }
 });
 
+// --- Reset Password Route (MVP Logic using Database) ---
+app.post('/send-reset-link', async (req, res) => {
+    const { email } = req.body;
+    
+    try {
+        // Check if a lecturer with that email exists in the database
+        const result = await pool.query('SELECT email FROM lecturers WHERE email = $1', [email]);
+        
+        // For security reasons, we give the same message regardless of whether the email exists.
+        if (result.rows.length > 0) {
+            console.log(`Password reset requested for a verified user: ${email}`);
+        } else {
+            console.log(`Password reset requested for a non-existent email: ${email}`);
+        }
+        
+        // MVP Response: Send the success alert and redirect to login
+        return res.send("<script>alert('If an account exists with that email, a password reset link has been sent.'); window.location.href='/login.html';</script>");
+
+    } catch (err) {
+        console.error('Database error during password reset:', err);
+        res.status(500).send('Server error. Please try again later.');
+    }
+});
+
 // --- Upload Route ---
 app.post('/upload', upload.single('documentFile'), async (req, res) => {
     const { title, course } = req.body;
