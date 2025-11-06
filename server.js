@@ -39,12 +39,11 @@ const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// --- 5. Configure Static Folders (for CSS, HTML, etc.) ---
+
 app.use(express.static(path.join(__dirname, 'html')));
 app.use(express.static(path.join(__dirname, 'css')));
 app.use(express.static(path.join(__dirname, '/')));
 
-// --- 6. DEFINE ALL YOUR ROUTES (Now using async/await with the database) ---
 
 // --- Home Route ---
 app.get('/', (req, res) => {
