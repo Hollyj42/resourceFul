@@ -7,6 +7,10 @@
     background-color: rgb(181, 181, 249);
 } */
 
+.nav{
+    margin-bottom: 30px;
+}
+
 .logo>a{
     text-decoration: none;
     color: white;
@@ -72,7 +76,7 @@ table{
     border-top-right-radius: 6px;
     width: fit-content;
     width: 80vw;
-    margin: auto;
+    margin: 100px auto 0px auto;
     font-size: 25px;
 }
 tr .detail{
